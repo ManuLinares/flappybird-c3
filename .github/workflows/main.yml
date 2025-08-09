@@ -1,0 +1,43 @@
+name: Build C3 Project
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache C3 compiler
+        id: cache-c3
+        uses: actions/cache@v4
+        with:
+          path: c3
+          key: c3-compiler-linux-latest
+
+      - name: Download and extract C3 compiler
+        if: steps.cache-c3.outputs.cache-hit != 'true'
+        run: |
+          wget https://github.com/c3lang/c3c/releases/latest/download/c3-linux.tar.gz
+          tar -xzf c3-linux.tar.gz
+
+      - name: Build Linux binary
+        run: |
+          ./c3/c3c build --target linux-x64
+
+      - name: Build Windows binary
+        run: |
+          ./c3/c3c build --target windows-x64
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: flappybird-binaries
+          path: |
+            build/flappybird
+            build/flappybird-win.exe

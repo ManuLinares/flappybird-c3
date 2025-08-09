@@ -1,0 +1,4 @@
+build/
+out/
+# msvc_sdk/
+lib/raylib55
