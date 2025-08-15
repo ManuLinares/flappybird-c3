@@ -17,7 +17,6 @@
       "target": "windows-x64",
       "type": "executable",
       "cflags": "-Oz",
-      //"link-args":  [ "-s" ],
       "winsdk": "./msvc_sdk/x64/"
     }
 
